@@ -1,0 +1,139 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+}
+
+// user model
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  username  String    @unique
+  email     String    @unique
+  phone     String?
+  role      String    @default("user")
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// employee model
+model Employee {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// item model
+model Item {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  modal     String
+  description  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// supplier model
+model Supplier {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// purchase model
+model Purchase {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  item      String 
+  supplier  String
+  quantity  Int
+  price     Float
+  total     Float
+  // date      DateTime
+  place     String    @default("container")
+  status    String    @default("pending")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// customer model
+model Customer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// stocks model
+model Stock {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  stock      String
+  item String
+  quantity  Int
+  price    Float
+  total    Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// transfer model
+model Transfer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  to        String
+  item      String 
+  date      DateTime
+  quantity  Int
+  price     Float
+  total     Float
+  // from      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// entitymodel
+model Entity {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// Cash Invoice model
+model CashInvoice {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  invoice_number Int 
+  customer  String
+  
+  invoice_date      DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  items CashInvoiceItem[]
+  
+}
+
+
+// cash invoice item model
+model CashInvoiceItem {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  invoice_id String @db.ObjectId
+
+  item      String 
+  quantity  Int
+  price     Float
+  total     Float
+
+  invoice CashInvoice @relation(fields: [invoice_id], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+
+
